@@ -1,0 +1,86 @@
+// @flow
+import { Button } from 'common/components/Button';
+import { connect } from 'react-redux';
+import React from 'react';
+
+import type { GlobalState, AsyncActionDispatcher } from 'model/client/framework';
+import { {{camelCase action}}{{FeatureName}}Action } from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Actions';
+import { selectHits } from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Selector';
+import createAsyncActionMonitorContainer from
+  'common/components/container/createAsyncActionMonitorContainer';
+
+
+const {{FeatureName}}LoadMonitor = createAsyncActionMonitorContainer([
+  {{camelCase action}}{{FeatureName}}Action,
+]);
+
+
+// FIXME: give meaningful props
+type Props = {
+  loading: boolean,
+  error: ?Error,
+  dismiss: () => void,
+  hits: number,
+  onHit: AsyncActionDispatcher<typeof {{camelCase action}}{{FeatureName}}Action>,
+};
+
+const {{FeatureName}} = ({
+ loading,
+ error,
+ dismiss,
+ hits,
+ onHit,
+}: Props) => (
+  <div id="{{FeatureName}}">
+    <h1>Total hits: {hits}</h1>
+    <p>
+      The success button will be succesful and has as 50% chance of a hit.
+    </p>
+    <p>
+      The error will throw an error reduce hits by 1.
+    </p>
+    {!error && <p>
+      <Button theme="primary" onClick={() => onHit(true)} throttleTime={0}>Success</Button>
+      <Button theme="secondary" onClick={() => onHit(false)} throttleTime={0} disabled={loading}>Error</Button>
+    </p>}
+    {loading && <div>
+      I like to load it, load it.
+    </div>}
+    {error && <div>
+      That was not supposed to happen... <br />
+      <Button theme="link" onClick={dismiss}>Clear error</Button>
+    </div>}
+  </div>
+);
+
+// HINT: @see https://pages.github.cainc.com/digit/educator-dashboard/how-to/create-a-feature.html#reading-global-state-in-the-container
+const mapStateToProps = (globalState: GlobalState) => ({
+  hits: selectHits(globalState),
+});
+
+// HINT: @see https://pages.github.cainc.com/digit/educator-dashboard/how-to/create-a-feature.html#dispatching-actions-in-the-container
+const mapDispatchToProps = {
+  onHit: {{camelCase action}}{{FeatureName}}Action,
+};
+
+const enhanceWithConnection = connect(mapStateToProps, mapDispatchToProps);
+
+const {{FeatureName}}Container = enhanceWithConnection(
+  {{FeatureName}},
+);
+
+export const __testExports__: any =
+  __TEST__ === true
+    ? {
+      mapStateToProps,
+      mapDispatchToProps,
+      {{FeatureName}},
+    } : {};
+
+export default () => (
+  <{{FeatureName}}LoadMonitor>
+    {({ loading, error, dismiss }) => (
+      <{{FeatureName}}Container loading={loading} error={error} dismiss={dismiss} />
+    )}
+  </{{FeatureName}}LoadMonitor>
+);

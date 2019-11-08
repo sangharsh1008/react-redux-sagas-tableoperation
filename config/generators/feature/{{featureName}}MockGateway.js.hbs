@@ -1,0 +1,10 @@
+// @flow
+
+export const errorMessage = 'Does not compute';
+
+// wait 750 ms, then throw an error if payload is false, otherwise respond randomly with 1 or 0
+// this is only exported to simulate being in a different file for mocking
+export const api = (shouldSucceed: boolean) => new Promise((yeah, nope) => {
+  const hit = Math.round(Math.random());
+  setTimeout(() => shouldSucceed ? yeah(hit) : nope(new Error(errorMessage)), 750);
+});

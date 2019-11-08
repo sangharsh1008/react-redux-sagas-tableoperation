@@ -1,0 +1,33 @@
+// @flow
+import { call } from 'redux-saga/effects';
+
+import type { IsExpectedError } from 'model/client/framework';
+import { createAsyncWorker, createWatcher } from 'common/utils/sagaUtils';
+import { {{camelCase action}}{{FeatureName}}Action } from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Actions';
+import { api, errorMessage } from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}MockGateway';
+
+const isExpectedError: IsExpectedError = error => error.message === errorMessage;
+
+// HINT: @see https://pages.github.cainc.com/digit/educator-dashboard/how-to/create-a-feature.html#handling-the-async-action-in-the-saga
+const {{camelCase action}}{{FeatureName}}Worker = createAsyncWorker(
+  {{camelCase action}}{{FeatureName}}Action,
+  function* {{camelCase action}}{{FeatureName}}(payload) {
+    // HINT: // to put an async action, waiting for the result:
+    // HINT: yield awaitPut(action, payload);
+    // HINT: // to put a sync action:
+    // HINT: yield put(action());
+    return yield call(api, payload);
+  },
+  isExpectedError,
+);
+const {{camelCase action}}{{FeatureName}}Watcher = createWatcher({{camelCase action}}{{FeatureName}}Action, {{camelCase action}}{{FeatureName}}Worker);
+
+export const __testExports__: any =
+  __TEST__ === true
+    ? {
+      {{camelCase action}}{{FeatureName}}Worker,
+      {{camelCase action}}{{FeatureName}}Watcher,
+    } : {};
+
+// Bootstrap sagas
+export default [{{camelCase action}}{{FeatureName}}Watcher];

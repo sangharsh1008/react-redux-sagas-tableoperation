@@ -1,0 +1,61 @@
+// @flow
+import { Button } from 'common/components/Button';
+
+import { __testExports__ } from '{{featureDir}}/{{lowerCase feature}}/{{FeatureName}}';
+import { renderComponent } from 'common/__support__/testUtils';
+
+jest.mock('{{featureDir}}/{{lowerCase feature}}/{{featureName}}Selector');
+
+const {
+  mapStateToProps,
+  mapDispatchToProps,
+  {{FeatureName}},
+} = __testExports__;
+
+describe('{{FeatureName}}', () => {
+  it('should render when not loading', () => {
+    const { enzymeWrapper } = renderComponent(
+      {{FeatureName}},
+      {
+        loading: false,
+        error: null,
+        hits: 5,
+      }
+    );
+
+    expect(enzymeWrapper).toMatchSnapshot();
+    expect(enzymeWrapper.find(Button).length).toBe(2);
+  });
+
+  it('should render when loading', () => {
+    const { enzymeWrapper } = renderComponent(
+      {{FeatureName}},
+      {
+        loading: true,
+        error: null,
+        hits: 4,
+      }
+    );
+
+    expect(enzymeWrapper).toMatchSnapshot();
+  });
+
+  it('should render when error', () => {
+    const dismiss = jest.fn();
+    const { enzymeWrapper } = renderComponent(
+      {{FeatureName}},
+      {
+        loading: false,
+        error: new Error(),
+        hits: 3,
+        dismiss,
+      }
+    );
+
+    expect(enzymeWrapper).toMatchSnapshot();
+    expect(enzymeWrapper.find(Button).length).toBe(1);
+    expect(dismiss).not.toHaveBeenCalled();
+    enzymeWrapper.find(Button).simulate('click');
+    expect(dismiss).toHaveBeenCalled();
+  });
+});

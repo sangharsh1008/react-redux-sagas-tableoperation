@@ -1,0 +1,77 @@
+// @flow
+import {
+  mockAwaitPut,
+  mockIdentity,
+  testWatcher,
+  emptyActionMeta,
+} from 'common/__support__/testUtils';
+import * as {{featureName}}Actions from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Actions';
+import * as {{featureName}}Sagas from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Sagas';
+import { api, errorMessage as expectedErrorMessage } from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}MockGateway';
+
+jest.mock('{{featureDir}}/{{lowerCase feature}}/{{featureName}}MockGateway');
+
+const {
+  __testExports__
+} = {{featureName}}Sagas;
+const { {{camelCase action}}{{FeatureName}}Watcher  } = __testExports__;
+const {
+  {{camelCase action}}{{FeatureName}}Action,
+} = {{featureName}}Actions;
+
+let fail = false;
+let hits = 0;
+let errorMessage = expectedErrorMessage;
+
+describe('{{featureName}} saga', () => {
+
+  beforeEach(() => {
+    fail = false;
+    hits = 0;
+    errorMessage = expectedErrorMessage;
+    mockAwaitPut();
+    mockIdentity(api).mockImplementation(() => fail ? Promise.reject(new Error(errorMessage)) : Promise.resolve(hits));
+  });
+
+  describe('{{camelCase action}}{{FeatureName}}', () => {
+    it('should call the api and dispatch the correct actions when data is successfully received', async() => {
+      hits = 1;
+      const expectedActions = [
+        {{camelCase action}}{{FeatureName}}Action(true),
+        {{camelCase action}}{{FeatureName}}Action.request(),
+        {{camelCase action}}{{FeatureName}}Action.success(hits),
+        {{camelCase action}}{{FeatureName}}Action.fulfill(),
+      ];
+
+      // RUN WATCHER, CHECK ALL EXPECTED ACTIONS FIRED
+      await testWatcher({{camelCase action}}{{FeatureName}}Watcher, {{camelCase action}}{{FeatureName}}Action(true), expectedActions);
+    });
+
+    it('should call the api and dispatch the correct actions when data has an expected error', async() => {
+      fail = true;
+      const expectedActions = [
+        {{camelCase action}}{{FeatureName}}Action(false),
+        {{camelCase action}}{{FeatureName}}Action.request(),
+        {{camelCase action}}{{FeatureName}}Action.failure(new Error(errorMessage), {...emptyActionMeta, expected: true}),
+        {{camelCase action}}{{FeatureName}}Action.fulfill(),
+      ];
+
+      // RUN WATCHER, CHECK ALL EXPECTED ACTIONS FIRED
+      await testWatcher({{camelCase action}}{{FeatureName}}Watcher, {{camelCase action}}{{FeatureName}}Action(false), expectedActions);
+    });
+
+    it('should call the api and dispatch the correct actions when data has an unexpected error', async() => {
+      fail = true;
+      errorMessage = 'That was unexpected.';
+      const expectedActions = [
+        {{camelCase action}}{{FeatureName}}Action(false),
+        {{camelCase action}}{{FeatureName}}Action.request(),
+        {{camelCase action}}{{FeatureName}}Action.failure(new Error(errorMessage)),
+        {{camelCase action}}{{FeatureName}}Action.fulfill(),
+      ];
+
+      // RUN WATCHER, CHECK ALL EXPECTED ACTIONS FIRED
+      await testWatcher({{camelCase action}}{{FeatureName}}Watcher, {{camelCase action}}{{FeatureName}}Action(false), expectedActions);
+    });
+  });
+});

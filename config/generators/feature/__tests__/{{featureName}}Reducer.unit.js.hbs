@@ -1,0 +1,24 @@
+
+// @flow
+import {{featureName}}Reducer from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Reducer';
+import { {{camelCase action}}{{FeatureName}}Action } from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Actions';
+import * as {{featureName}}TestData from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}TestData';
+
+const initialState = {{featureName}}TestData.getInitialState();
+const error = new Error('SOMETHING WENT HORRIBLY WRONG');
+
+describe('{{featureName}} reducer', () => {
+  it('should return the initial state', () => {
+    // $FlowIssue
+    expect({{featureName}}Reducer(undefined, {})).toEqual(initialState);
+  });
+  it('Should increment hits according to the success payload', () => {
+    expect({{featureName}}Reducer({ ...initialState }, {{camelCase action}}{{FeatureName}}Action.success(1))).toEqual({...initialState, data: {...initialState.data, hits: 1}});
+  });
+  it('should reduce hits on error', () => {
+    expect({{featureName}}Reducer({...initialState, data: {...initialState.data, hits: 3}}, {{camelCase action}}{{FeatureName}}Action.failure(error))).toEqual({...initialState, data: {...initialState.data, hits: 2}});
+  });
+  it('should not reduce hits below 0', () => {
+    expect({{featureName}}Reducer({...initialState}, {{camelCase action}}{{FeatureName}}Action.failure(error))).toEqual({...initialState, data: {...initialState.data}});
+  });
+});

@@ -1,0 +1,9 @@
+// @flow
+import createAsyncActions from 'common/utils/createAsyncActions';
+
+import type { AsyncActionCreator } from 'model/client/framework';
+
+const prefix = '{{featureDir}}/{{featureName}}';
+export const {{camelCase action}}{{FeatureName}}Type = `${prefix}/{{constantCase action}}`
+// HINT: @see https://pages.github.cainc.com/digit/educator-dashboard/how-to/create-a-feature.html#exposing-the-features-data-with-selectors#actions
+export const {{camelCase action}}{{FeatureName}}Action: AsyncActionCreator<boolean, 0 | 1> = createAsyncActions({{camelCase action}}{{FeatureName}}Type);

@@ -1,0 +1,44 @@
+// @flow
+import { handleActions } from 'redux-actions';
+
+import { {{camelCase action}}{{FeatureName}}Action } from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Actions';
+
+import type { ActionReducer } from 'model/client/framework';
+
+type State = {
+  data: {
+    hits: number,
+  },
+};
+
+export const initialState: State = {
+  data: {
+    hits: 0,
+  },
+};
+
+// START SELECTORS
+// HINT: @see https://pages.github.cainc.com/digit/educator-dashboard/how-to/create-a-feature.html#exposing-local-selectorsr-in-the-reducer
+export const selectHits = (state: State) => state.data.hits;
+// END SELECTORS
+
+// HINT: @see https://pages.github.cainc.com/digit/educator-dashboard/how-to/create-a-feature.html#updating-global-state-with-the-reducer
+export default handleActions(
+  {
+    [String({{camelCase action}}{{FeatureName}}Action.success)]: ((state, {payload: {data: hits}}) => ({
+      ...state,
+      data: {
+        ...state.data,
+        hits: state.data.hits + hits,
+      }
+    }): ActionReducer<State, typeof {{camelCase action}}{{FeatureName}}Action.success>),
+    [String({{camelCase action}}{{FeatureName}}Action.failure)]: ((state, action) => ({
+      ...state,
+      data: {
+        ...state.data,
+        hits: state.data.hits > 1 ? state.data.hits - 1 : 0,
+      }
+    }): ActionReducer<State, typeof {{camelCase action}}{{FeatureName}}Action.failure>),
+  },
+  initialState,
+);

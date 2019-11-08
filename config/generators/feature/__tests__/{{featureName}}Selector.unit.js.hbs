@@ -1,0 +1,16 @@
+// @flow
+import _ from 'lodash';
+import * as {{featureName}}Selector from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Selector';
+
+const hits = Math.random();
+const data = { hits };
+
+const state = _.set({}, {{featureName}}Selector.path, { data });
+
+describe('{{featureName}} selector', () => {
+  describe('selectHits', () => {
+    it('should return the correct value', () => {
+      expect({{featureName}}Selector.selectHits(state)).toEqual(hits);
+    });
+  });
+});

@@ -1,0 +1,9 @@
+// @flow
+import globalize from 'common/utils/globalize';
+import * as local from '{{featureDir}}/{{lowerCase feature}}/{{featureName}}Reducer';
+
+export const path = '{{featureDir}}.{{featureName}}';
+
+// FIXME: expose Reducer's Selectors - do not reference internal state directly here - use selectors from the Reducer, or other Selectors files
+// HINT: @see https://pages.github.cainc.com/digit/educator-dashboard/how-to/create-a-feature.html#exposing-the-features-data-with-selectors
+export const selectHits = globalize(local.selectHits, path);
